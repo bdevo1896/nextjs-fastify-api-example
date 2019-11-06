@@ -11,20 +11,20 @@ fastify.register((fastify, opts, next) => {
     .prepare()
     .then(() => {
       if (dev) {
-        fastify.get('/_next/*', (req, reply) => {
+        fastify.get('/_next/*', (req, reply,next) => {
           return app.handleRequest(req.req, reply.res).then(() => {
             reply.sent = true
           })
         })
       }
 
-      fastify.all('/*', (req, reply) => {
+      fastify.all('/*', (req, reply,next) => {
         return app.handleRequest(req.req, reply.res).then(() => {
           reply.sent = true
         })
       })
 
-      fastify.setNotFoundHandler((request, reply) => {
+      fastify.setNotFoundHandler((request, reply,next) => {
         return app.render404(request.req, reply.res).then(() => {
           reply.sent = true
         })
